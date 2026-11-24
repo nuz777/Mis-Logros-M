@@ -1,0 +1,33 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Iniciar sesión";
+}
+
+<div class="panel auth-panel">
+    <h1 class="panel-title">Iniciar sesión</h1>
+    <form asp-action="Login" method="post">
+        <input asp-for="ReturnUrl" type="hidden" />
+        <div asp-validation-summary="All" class="validation-summary"></div>
+
+        <label asp-for="Email">Correo</label>
+        <input asp-for="Email" class="input" autocomplete="username" />
+        <span asp-validation-for="Email" class="field-error"></span>
+
+        <label asp-for="Password">Contraseña</label>
+        <input asp-for="Password" class="input" autocomplete="current-password" />
+        <span asp-validation-for="Password" class="field-error"></span>
+
+        <label class="checkbox-label">
+            <input asp-for="RememberMe" />
+            Recordarme
+        </label>
+
+        <button class="btn btn-block" type="submit">Entrar</button>
+    </form>
+
+    <p class="auth-switch">¿No tienes cuenta? <a asp-action="Register">Regístrate</a></p>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

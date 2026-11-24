@@ -1,0 +1,31 @@
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "Crear cuenta";
+}
+
+<div class="panel auth-panel">
+    <h1 class="panel-title">Crear cuenta</h1>
+    <form asp-action="Register" method="post">
+        <div asp-validation-summary="All" class="validation-summary"></div>
+
+        <label asp-for="Email">Correo</label>
+        <input asp-for="Email" class="input" autocomplete="username" />
+        <span asp-validation-for="Email" class="field-error"></span>
+
+        <label asp-for="Password">Contraseña</label>
+        <input asp-for="Password" class="input" autocomplete="new-password" />
+        <span asp-validation-for="Password" class="field-error"></span>
+
+        <label asp-for="ConfirmPassword">Confirmar contraseña</label>
+        <input asp-for="ConfirmPassword" class="input" autocomplete="new-password" />
+        <span asp-validation-for="ConfirmPassword" class="field-error"></span>
+
+        <button class="btn btn-block" type="submit">Empezar</button>
+    </form>
+
+    <p class="auth-switch">¿Ya tienes cuenta? <a asp-action="Login">Inicia sesión</a></p>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

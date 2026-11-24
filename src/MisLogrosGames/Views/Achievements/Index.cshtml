@@ -1,0 +1,96 @@
+@model AchievementsPageViewModel
+@{
+    ViewData["Title"] = "Logros";
+    var createOpen = !ViewData.ModelState.IsValid;
+}
+
+<div class="panel achievements-panel">
+    <div class="panel-heading">
+        <div>
+            <h1 class="panel-title">Tus logros</h1>
+            <p class="section-subtitle">Cada bloque cuenta una historia. Crea los tuyos y desbloquea los que te correspondan.</p>
+        </div>
+        <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#createAchievement" aria-expanded="@(createOpen ? "true" : "false")" aria-controls="createAchievement">
+            + Nuevo logro
+        </button>
+    </div>
+
+    <div class="collapse create-panel @(createOpen ? "show" : "")" id="createAchievement">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+            <h2 class="create-title">Forja un logro</h2>
+            <div class="create-fields">
+                <div>
+                    <label asp-for="Create.Name">Nombre</label>
+                    <input asp-for="Create.Name" class="input" />
+                    <span asp-validation-for="Create.Name" class="field-error"></span>
+                </div>
+                <div>
+                    <label asp-for="Create.Description">Descripción</label>
+                    <textarea asp-for="Create.Description" class="input" rows="2"></textarea>
+                    <span asp-validation-for="Create.Description" class="field-error"></span>
+                </div>
+            </div>
+            <fieldset class="icon-fieldset">
+                <legend>Ícono</legend>
+                <div class="icon-picker">
+                    @foreach (var icon in AchievementIcons.All)
+                    {
+                        <label class="icon-option">
+                            <input type="radio" asp-for="Create.Icon" value="@icon" />
+                            <img src="~/img/achievements/@(icon).svg" alt="" />
+                            <span>@icon</span>
+                        </label>
+                    }
+                </div>
+                <span asp-validation-for="Create.Icon" class="field-error"></span>
+            </fieldset>
+            <button class="btn" type="submit">Guardar logro</button>
+        </form>
+    </div>
+
+    <div class="achievement-grid">
+        @foreach (var achievement in Model.Items)
+        {
+            <article class="achievement-card @(achievement.UnlockedAt is null ? "locked" : "unlocked")">
+                <div class="achievement-icon-frame">
+                    <img class="achievement-icon" src="~/img/achievements/@(achievement.Icon).svg" alt="" />
+                </div>
+                <div class="achievement-body">
+                    <div class="achievement-heading">
+                        <h2>@achievement.Name</h2>
+                        @if (achievement.IsCustom)
+                        {
+                            <span class="achievement-badge">Tuyo</span>
+                        }
+                    </div>
+                    @if (!achievement.IsCustom)
+                    {
+                        <p class="achievement-code">@achievement.Code</p>
+                    }
+                    <p>@achievement.Description</p>
+
+                    @if (achievement.UnlockedAt is { } unlockedAt)
+                    {
+                        <p class="achievement-state">Desbloqueado @unlockedAt.LocalDateTime.ToString("dd/MM/yyyy HH:mm")</p>
+                        @if (achievement.IsCustom)
+                        {
+                            <form asp-action="DeleteCustom" method="post" class="delete-form">
+                                <input type="hidden" name="id" value="@achievement.Id" />
+                                <button class="btn btn-danger btn-small" type="submit">Eliminar</button>
+                            </form>
+                        }
+                    }
+                    else
+                    {
+                        <p class="achievement-state">Bloqueado</p>
+                        <form asp-action="Unlock" method="post">
+                            <input type="hidden" name="id" value="@achievement.Id" />
+                            <button class="btn btn-small" type="submit">Desbloquear</button>
+                        </form>
+                    }
+                </div>
+            </article>
+        }
+    </div>
+</div>

@@ -1,0 +1,20 @@
+﻿@{
+    ViewData["Title"] = "Inicio";
+}
+
+<div class="panel hero">
+    <p class="eyebrow">Mis Logros</p>
+    <h1>Caza logros. Forja tu nombre.</h1>
+    <p class="hero-text">Un archivo de logros estilo bloques para registrar tus pequeñas grandes victorias.</p>
+    <div class="hero-actions">
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <a class="btn" asp-controller="Achievements" asp-action="Index">Ver mis logros</a>
+        }
+        else
+        {
+            <a class="btn" asp-controller="Account" asp-action="Register">Crear cuenta</a>
+            <a class="btn btn-secondary" asp-controller="Account" asp-action="Login">Iniciar sesión</a>
+        }
+    </div>
+</div>
